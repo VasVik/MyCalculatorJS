@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Web Calculator</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+
+</head>
+
+<body>
+    <div class="calculator">
+        <form>
+            <input type="text" name="result" placeholder="0">
+            <div class="row">
+                <input type="button" value="C" onclick="clearInput()">
+                <input type="button" value="&larr;" onclick="backspace()">
+                <input type="button" value="/" onclick="appendToInput('/')">
+                <input type="button" value="*" onclick="appendToInput('*')">
+            </div>
+            <div class="row">
+                <input type="button" value="7" onclick="appendToInput('7')">
+                <input type="button" value="8" onclick="appendToInput('8')">
+                <input type="button" value="9" onclick="appendToInput('9')">
+                <input type="button" value="-" onclick="appendToInput('-')">
+            </div>
+            <div class="row">
+                <input type="button" value="4" onclick="appendToInput('4')">
+                <input type="button" value="5" onclick="appendToInput('5')">
+                <input type="button" value="6" onclick="appendToInput('6')">
+                <input type="button" value="+" onclick="appendToInput('+')">
+            </div>
+            <div class="row">
+                <input type="button" value="1" onclick="appendToInput('1')">
+                <input type="button" value="2" onclick="appendToInput('2')">
+                <input type="button" value="3" onclick="appendToInput('3')">
+                <input type="button" value="=" onclick="calculate()">
+            </div>
+        </form>
+    </div>
+    <script src="g.js"></script>
+</body>
+
+</html>
