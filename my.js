@@ -267,6 +267,7 @@
         // console.log('i', i);
         if (val > 0) {
             if (fromInput[0][0] === '0' && fromInput[0][1] !== '.') {
+
                 inpResult.value = i.slice(0, i.length - 1) + val;
                 return false;
             }
@@ -336,32 +337,53 @@
 
     function addSignMinusTo() {
 
-        // TODO: Проверить на адекватность регулярку)
-        const regSignWNum = /(?<=[*\/+-]+|^|\()(-?\d+(?:[.,]\d+)?%?$)/;
-        // const regSignWNum = /\d+[.,]?\d*%?$/;
+        const regLastNum = /[-+]?\d+[.,]?\d*%?$/;
 
         let i = inpResult.value.trim();
+        let lNum = i.match(regLastNum);
 
-        let signWNum = i.match(regSignWNum) ?? false;
-        if (!signWNum) {
+        if (!lNum) {
             return;
         }
-        console.log(signWNum);
 
-        i = i.slice(0, signWNum.index);
+        i = i.slice(0, lNum.index);
+        lNum = lNum[0];
 
-        signWNum = signWNum[0].split('');
-
-        if (signWNum[0] === '-') {
-
-            signWNum[0] = '';
+        if (lNum[0] === '-') {
+            inpResult.value = i + '+' + lNum.slice(1);
+        } else if (lNum[0] === '+') {
+            inpResult.value = i + '-' + lNum.slice(1);
         } else {
-
-            signWNum.unshift('-');
+            inpResult.value = i + '-' + lNum;
         }
 
-        signWNum = signWNum.join('');
-        inpResult.value = i + signWNum;
+
+        {// TODO: Проверить на адекватность регулярку)
+            // const regSignWNum = /(?<=[*\/+-]+|^|\()(-?\d+(?:[.,]\d+)?%?$)/;
+
+            // let i = inpResult.value.trim();
+
+            // let signWNum = i.match(regSignWNum) ?? false;
+            // if (!signWNum) {
+            //     return;
+            // }
+            // console.log(signWNum);
+
+            // i = i.slice(0, signWNum.index);
+
+            // signWNum = signWNum[0].split('');
+
+            // if (signWNum[0] === '-') {
+
+            //     signWNum[0] = '';
+            // } else {
+
+            //     signWNum.unshift('-');
+            // }
+
+            // signWNum = signWNum.join('');
+            // inpResult.value = i + signWNum;
+        }
 
         correctIfMany();
     }
@@ -412,6 +434,7 @@
 
             res = i.slice(0, forSlice);
 
+            // console.log(extZeros, res);
             if (strExtZer[strExtZer.length - 1] === '%') {
                 res += '%';
             }
