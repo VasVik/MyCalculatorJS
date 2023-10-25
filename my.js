@@ -21,7 +21,7 @@
         }
 
         // event for sign
-        if (checkSign(item.value)) {
+        if (arrSign.includes(item.value)) {
             item.addEventListener('click', sign);
             continue;
         }
@@ -51,67 +51,9 @@
         // item.addEventListener('click', add);
     }
 
-    el('.test').addEventListener('click', test);
-
-    function test() {
-
-        // my regular expressions
-
-        // /\d+(?:[.,]\d+)?/g // number with dot or comma
-        // /\(\d+(?:[.,]\d+)?(?:[*/+-]+\d+(?:[.,]\d+)?)+\)/g
-        // /(?!\()\d+(?:[.,]\d+)?(?:[*/+-]+\d+(?:[.,]\d+)?)+(?=\))/g // удаление скобок из результата without parenthesis
-        // /[*/+-]+/g // all sign
-        // /[*/+-](?=\d+(?:[.,]\d+)?$)/ // only last sign
-
-        // const regExpNum = /\d+(?:[.,]\d+)?/g;
-        // const regSign = /[*/+-]+/g;
-
-        // const skob = /\(\d+(?:[.,]\d+)?(?:[*/+-]+\d+(?:[.,]\d+)?)+\)/g;
-
-
-        // const i = inpResult.value.trim();
-        // const tNum = i.match(regExpNum);
-        // const tSign = i.match(regSign);
-
-        // const arrSkob = i.match(skob);
-
-        // let tmp = i;
-        // while (skob.test(tmp)) {
-
-        //     tmp = tmp.replace(skob, e => {
-
-        //         e = e.slice(1, e.length - 1); // -( and -)
-
-        //         const arrFrStr = arrFromString(e);
-        //         const resArr = resArray(arrFrStr);
-
-        //         return resArr[0];
-        //     });
-        // }
-
-        // const arrFrStr = arrFromString(tmp);
-        // const resArr = resArray(arrFrStr);
-
-        // // console.log(resArr);
-
-        // inpResult.value = resArr[0] || '0';
-
-        // console.log('resArr = ', resArr);
-
-        // const tmp = i.split(skob);
-
-        // console.log(i);
-        // console.log(tmp);
-        // console.log(arrSkob);
-        // console.log('tNum', tNum);
-        // console.log('tSign', tSign);
-    }
-
     // function for events
 
     function clear() {
-        // flagPercent = false;
-
         inpResult.value = '';
 
         correctIfMany();
@@ -120,10 +62,6 @@
     function backSpace() {
         let endS = inpResult.value.length - 1;
         if (endS < 0) return;
-
-        // if (inpResult.value[endS] === '%') {
-        //     toggleFlag(flagPercent);
-        // }
 
         inpResult.value = inpResult.value.slice(0, endS);
 
@@ -160,8 +98,6 @@
         }
     }
 
-
-    //TODO: implement screen overflow
     function add(element) {
         // console.log('test', this, 'element', element);
 
@@ -187,7 +123,6 @@
 
         // const regLastNum = /\d+[,.]\d*%?$|\d+%?$/;
         const regLastNum = /\d+[.,]?\d*%?$/;
-
 
         const i = inpResult.value.trim();
         let findFromInput = i.match(regLastNum);
@@ -388,7 +323,6 @@
         correctIfMany();
     }
 
-    // TODO: !? change to .at(-1)
     function sign() {
         const lastCharacter = inpResult.value.length - 1;
         // flagPercent = false;
@@ -420,47 +354,48 @@
     }
     function replExtZeros() {
 
-        // const regExtraZeros1 = /(?<=[,.]\d*)0+(?:%)?$/;
-        const regExtraZeros = /[,.]?0*%?$/;
+        // const regExtraZeros = /(?<=[,.]\d*)0+(?:%)?$/;
+        const regExtraZeros = /\d*[.,]?\d*%?$/;
 
         let i = inpResult.value.trim();
 
         const extZeros = i.match(regExtraZeros);
 
-        if (extZeros) {
-            const strExtZer = extZeros[0];
+        if (extZeros[0]) {
+
+            let strExtZer = extZeros[0];
             let res = '';
-            let forSlice = extZeros.index;
+            let endSlice = extZeros.index;
 
-            res = i.slice(0, forSlice);
-
-            // console.log(extZeros, res);
             if (strExtZer[strExtZer.length - 1] === '%') {
+                strExtZer = +strExtZer.slice(0, strExtZer.length - 1);
+                res = i.slice(0, endSlice) + strExtZer;
                 res += '%';
+            } else {
+                res = i.slice(0, endSlice) + +strExtZer;
             }
+
             inpResult.value = res;
         }
-    }
+        // if (extZeros) {
+        //     const strExtZer = extZeros[0];
+        //     let res = '';
+        //     let endSlice = extZeros.index;
 
-    //TODO: заменить везде на arrSign.includes(x); и убрать эту ф-ю.
-    function checkSign(sign) {
-        let bResult = false;
+        //     res = i.slice(0, endSlice);
 
-        bResult = arrSign.includes(sign);
-
-        return bResult;
-    }
-
-    function toggleFlag(flag) {
-
-        flag = flag === true ? false : true;
+        //     // console.log(extZeros, res);
+        //     if (strExtZer[strExtZer.length - 1] === '%') {
+        //         res += '%';
+        //     }
+        //     inpResult.value = res;
+        // }
     }
 
     /**
      * Final result
      */
     function result() {
-        // flagPercent = false;
 
         const regExpParenthesis = /\((?:[*\/+-]?)\d+(?:[.,]\d+)?(?:[*\/+-]+\d+(?:[.,]\d+)?)+\)/g;
 
@@ -470,6 +405,7 @@
         if (arrSign.includes(inpData[inpData.length - 1])) {
             inpData = inpData.slice(0, inpData.length - 1);
         }
+
         // console.log('inpData', inpData);
 
         // TODO: probably put in a separate function
@@ -484,8 +420,9 @@
                     e = e.slice(1, e.length - 1); // cut - '(' and ')'
 
                     const arrFrStr = arrFromString(e);
+                    console.log(arrFrStr);
                     const resArr = resArray(arrFrStr);
-
+                    console.log(resArr[0]);
                     return resArr[0];
                 });
             }
@@ -543,9 +480,9 @@
 
             const val = (str[key] === ',') ? '.' : str[key];
 
-            if (checkSign(val)) {
+            if (arrSign.includes(val)) {
 
-                if (checkSign(str[key - 1])) {
+                if (arrSign.includes(str[key - 1])) {
                     flagMinus = true;
                     continue;
                 }
@@ -714,6 +651,64 @@
 
     // test
 
+    //test event
+    el('.test').addEventListener('click', test);
+
+    // test func
+    function test() {
+
+        // my regular expressions
+
+        // /\d+(?:[.,]\d+)?/g // number with dot or comma
+        // /\(\d+(?:[.,]\d+)?(?:[*/+-]+\d+(?:[.,]\d+)?)+\)/g
+        // /(?!\()\d+(?:[.,]\d+)?(?:[*/+-]+\d+(?:[.,]\d+)?)+(?=\))/g // удаление скобок из результата without parenthesis
+        // /[*/+-]+/g // all sign
+        // /[*/+-](?=\d+(?:[.,]\d+)?$)/ // only last sign
+
+        // const regExpNum = /\d+(?:[.,]\d+)?/g;
+        // const regSign = /[*/+-]+/g;
+
+        // const skob = /\(\d+(?:[.,]\d+)?(?:[*/+-]+\d+(?:[.,]\d+)?)+\)/g;
+
+
+        // const i = inpResult.value.trim();
+        // const tNum = i.match(regExpNum);
+        // const tSign = i.match(regSign);
+
+        // const arrSkob = i.match(skob);
+
+        // let tmp = i;
+        // while (skob.test(tmp)) {
+
+        //     tmp = tmp.replace(skob, e => {
+
+        //         e = e.slice(1, e.length - 1); // -( and -)
+
+        //         const arrFrStr = arrFromString(e);
+        //         const resArr = resArray(arrFrStr);
+
+        //         return resArr[0];
+        //     });
+        // }
+
+        // const arrFrStr = arrFromString(tmp);
+        // const resArr = resArray(arrFrStr);
+
+        // // console.log(resArr);
+
+        // inpResult.value = resArr[0] || '0';
+
+        // console.log('resArr = ', resArr);
+
+        // const tmp = i.split(skob);
+
+        // console.log(i);
+        // console.log(tmp);
+        // console.log(arrSkob);
+        // console.log('tNum', tNum);
+        // console.log('tSign', tSign);
+    }
+    // end test event & func
 
 })()
 
