@@ -1,15 +1,9 @@
 (function () {
-    console.log('hI');
-
-    let el = e => document.querySelector(e);
 
     let buttons = document.querySelectorAll('.calculator input');
-    // let inpResult = document.forms[0].result;
-    let inpResult = 0; // ?
+
+    let inpResult = 0;
     let arrSign = ['*', '/', '-', '+'];
-    // let arrExpElem = []; // ?
-    // let flagSign = false; // ?
-    let flagPercent = false;
 
     // set events
     for (const item of buttons) {
@@ -30,9 +24,6 @@
             case 'C':
                 item.addEventListener('click', clear);
                 continue;
-            // case '%':
-
-            //     continue;
             case '=':
                 item.addEventListener('click', result);
                 continue;
@@ -45,10 +36,9 @@
             item.addEventListener('click', backSpace);
             continue;
         }
-        // console.log(item);
 
         item.addEventListener('click', () => { add(item) });
-        // item.addEventListener('click', add);
+
     }
 
     // function for events
@@ -74,19 +64,14 @@
     function correctIfMany() {
         let styleCss = getComputedStyle(inpResult);
 
-        // console.log(styleCss.width);
-
         let iWidth = styleCss.width;
         iWidth = +iWidth.slice(0, iWidth.length - 2);
-
-        // console.log(iWidth);
 
         if (inpResult.value.length > 10) {
 
             // inpResult.style.width = inpResult.value.length * 27 - 1 + 'px';
             // inpResult.style.textAlign = 'center';
 
-            // console.log(inpResult.value.length + 3);
             inpResult.size = inpResult.value.length * 1.23;
 
             inpResult.style.width = 'auto';
@@ -99,9 +84,6 @@
     }
 
     function add(element) {
-        // console.log('test', this, 'element', element);
-
-        // const valid = validForInput(onPercent, onFirstZero);
 
         const elVal = element.value;
 
@@ -109,8 +91,6 @@
 
             inpResult.value += elVal;
         }
-
-        // changeFirstZero(element.value);
 
         correctIfMany();
 
@@ -121,19 +101,14 @@
         let res = true;
         let numLen = 0;
 
-        // const regLastNum = /\d+[,.]\d*%?$|\d+%?$/;
         const regLastNum = /\d+[.,]?\d*%?$/;
 
         const i = inpResult.value.trim();
         let findFromInput = i.match(regLastNum);
 
-        // console.log(findFromInput);
         if (findFromInput) {
             numLen = findFromInput[0].length
-            // console.log(findFromInput[0].length);
         }
-
-        // console.log(val, findFromInput);
 
         switch (val) {
             case '%':
@@ -179,7 +154,6 @@
     // many first zeros
     function onFirstZero(fromInput) {
 
-        // console.log(fromInput);
         if (!fromInput) {
             return true;
         }
@@ -195,11 +169,9 @@
         if (!fromInput) {
             return true;
         }
-        // console.log('val', val);
 
         const i = inpResult.value.trim();
 
-        // console.log('i', i);
         if (val > 0) {
             if (fromInput[0][0] === '0' && fromInput[0][1] !== '.') {
 
@@ -215,61 +187,6 @@
     /**
      * adding a sign to a number
      */
-    // function addSignMinusTo() {
-
-    //     // const regSignWNum = /[*\/+-]+\d+(?:[.,]\d+)?$/;
-    //     const regSignWNum = /[*\/+-](?=\d+(?:[.,]\d+)?%?$)/; // find last sign
-    //     let i = inpResult.value.trim();
-
-    //     const lastSign = i.match(regSignWNum) ?? false;
-    //     if (!lastSign) {
-    //         return;
-    //     }
-
-    //     console.log(lastSign[0], lastSign);
-
-    //     switch (lastSign[0]) {
-
-    //         case '+':
-    //             lastSign[0] = '-';
-    //             break;
-
-    //         case '-':
-    //             // console.log(i[lastSign.index - 1]);
-    //             if (i[lastSign.index - 1] === '*' || i[lastSign.index - 1] === '/') {
-
-    //                 lastSign[0] = '';
-    //                 break;
-    //             }
-    //             lastSign[0] = '+';
-    //             break;
-
-    //         case '*':
-    //         case '/':
-    //             lastSign[0] = lastSign[0] + '-';
-    //             console.log(lastSign[0]);
-    //             break;
-    //     }
-
-    //     iArr = i.split('');
-
-    //     // if number is first
-    //     if (!lastSign) {
-    //         const allSigns = i.match(/[*\/+-]/g); // all signs
-
-    //         if (!allSigns) {
-
-    //             iArr.unshift('-');
-    //         }
-    //     } else {
-    //         const key = lastSign.index;
-
-    //         iArr[key] = lastSign[0];
-    //     }
-
-    //     inpResult.value = iArr.join('');
-    // }
-
     function addSignMinusTo() {
 
         const regLastNum = /[-+]?\d+[.,]?\d*%?$/;
@@ -292,40 +209,11 @@
             inpResult.value = i + '-' + lNum;
         }
 
-
-        {// TODO: Проверить на адекватность регулярку)
-            // const regSignWNum = /(?<=[*\/+-]+|^|\()(-?\d+(?:[.,]\d+)?%?$)/;
-
-            // let i = inpResult.value.trim();
-
-            // let signWNum = i.match(regSignWNum) ?? false;
-            // if (!signWNum) {
-            //     return;
-            // }
-            // console.log(signWNum);
-
-            // i = i.slice(0, signWNum.index);
-
-            // signWNum = signWNum[0].split('');
-
-            // if (signWNum[0] === '-') {
-
-            //     signWNum[0] = '';
-            // } else {
-
-            //     signWNum.unshift('-');
-            // }
-
-            // signWNum = signWNum.join('');
-            // inpResult.value = i + signWNum;
-        }
-
         correctIfMany();
     }
 
     function sign() {
         const lastCharacter = inpResult.value.length - 1;
-        // flagPercent = false;
 
         replExtZeros();
 
@@ -339,22 +227,10 @@
             inpResult.value += this.value;
         }
 
-        // add(this);
-
-        // let tmp = inpResult.value[lastCharacter];
-        // tmp = +tmp || tmp;
-
-        // // console.log(this.value, tmp, tmp != this.value, typeof tmp);
-
-        // if (this.value != tmp && arrSign.includes(tmp)) {
-        //     inpResult.value = inpResult.value.slice(0, lastCharacter) + this.value;
-        // }
-
         correctIfMany();
     }
     function replExtZeros() {
 
-        // const regExtraZeros = /(?<=[,.]\d*)0+(?:%)?$/;
         const regExtraZeros = /\d*[.,]?\d*%?$/;
 
         let i = inpResult.value.trim();
@@ -377,19 +253,6 @@
 
             inpResult.value = res;
         }
-        // if (extZeros) {
-        //     const strExtZer = extZeros[0];
-        //     let res = '';
-        //     let endSlice = extZeros.index;
-
-        //     res = i.slice(0, endSlice);
-
-        //     // console.log(extZeros, res);
-        //     if (strExtZer[strExtZer.length - 1] === '%') {
-        //         res += '%';
-        //     }
-        //     inpResult.value = res;
-        // }
     }
 
     /**
@@ -406,9 +269,6 @@
             inpData = inpData.slice(0, inpData.length - 1);
         }
 
-        // console.log('inpData', inpData);
-
-        // TODO: probably put in a separate function
         if (regExpParenthesis.test(inpData)) {
 
             regExpParenthesis.lastIndex = 0;
@@ -429,16 +289,12 @@
         }
 
         const arrFrStr = arrFromString(inpData);
-        // console.log(arrFrStr);
 
         const resArr = resArray(arrFrStr);
-        // console.log(resArr);
 
-        //TODO: Select from two methods
         let res = resArr[0];
 
         if (isNaN(res)) {
-            // res = 'Err';
             res = '0';
         } else {
             res = +resArr[0].toFixed(10) ?? 'Err';
@@ -447,10 +303,6 @@
         inpResult.value = res;
 
         correctIfMany();
-
-        // const resTmp = +resArr[0].toFixed(10) ?? 'Err';    
-        // inpResult.value = '';
-        // inpResult.setAttribute('placeholder', resTmp);
     }
 
     /**
@@ -460,13 +312,12 @@
      */
     function arrFromString(str) {
 
-        // console.log(str);
         let res = [];
         let flagMinus = false;
         let num = '';
 
         const checkFlag = num => {
-            // console.log('checkFlag', flagMinus, num);
+
             if (flagMinus) {
                 return '-' + num;
             } else {
@@ -502,15 +353,13 @@
                 }
 
             }
-            // console.log('val', val, 'num', num);
         }
 
-        // console.log('arrFromStr', res);
         return res;
     }
 
     function checkPercentSign(num) {
-        // console.log('checkPercent', num, num[num.length - 1]);
+
         if (num[num.length - 1] === '%') {
             return num;
         } else {
@@ -536,52 +385,6 @@
      * @param {Array} arr array form string
      * @returns counted array
      */
-    // function resArray(arr) {
-
-    //     let res = arr;
-
-    //     for (const sign of arrSign) {
-
-    //         // while (res.findIndex(e => e === sign) !== -1) {
-    //         while (true) {
-
-    //             let resTmp = 0;
-
-    //             const keySign = res.findIndex(e => e === sign);
-    //             if (keySign === -1) {
-    //                 break;
-    //             }
-
-    //             const num1 = res[keySign - 1];
-    //             let num2 = res[keySign + 1];
-
-    //             if (num2[num2.length - 1] === '%') {
-    //                 num2 = percent(num1, (num2.slice(0, length - 1)));
-    //             }
-
-    //             switch (sign) {
-
-    //                 case '*':
-    //                     resTmp = num1 * num2;
-    //                     break;
-    //                 case '/':
-    //                     resTmp = num1 / num2;
-    //                     break;
-    //                 case '-':
-    //                     resTmp = num1 - num2;
-    //                     break;
-    //                 case '+':
-    //                     resTmp = num1 + num2;
-    //                     break;
-    //             }
-
-    //             res.splice(keySign - 1, 3, resTmp);
-    //             // console.log('res', res);
-    //         }
-    //     }
-
-    //     return res;
-    // }
     function resArray(arr) {
 
         let res = arr;
@@ -610,7 +413,6 @@
             res = numsOperation(res, +keySign);
         }
 
-        // console.log('res +- ', res);
         return res;
     }
 
@@ -645,70 +447,8 @@
         }
 
         arr.splice(keySign - 1, 3, resTmp);
-        // console.log('tmpres', arr);
+
         return arr;
     }
-
-    // test
-
-    //test event
-    el('.test').addEventListener('click', test);
-
-    // test func
-    function test() {
-
-        // my regular expressions
-
-        // /\d+(?:[.,]\d+)?/g // number with dot or comma
-        // /\(\d+(?:[.,]\d+)?(?:[*/+-]+\d+(?:[.,]\d+)?)+\)/g
-        // /(?!\()\d+(?:[.,]\d+)?(?:[*/+-]+\d+(?:[.,]\d+)?)+(?=\))/g // удаление скобок из результата without parenthesis
-        // /[*/+-]+/g // all sign
-        // /[*/+-](?=\d+(?:[.,]\d+)?$)/ // only last sign
-
-        // const regExpNum = /\d+(?:[.,]\d+)?/g;
-        // const regSign = /[*/+-]+/g;
-
-        // const skob = /\(\d+(?:[.,]\d+)?(?:[*/+-]+\d+(?:[.,]\d+)?)+\)/g;
-
-
-        // const i = inpResult.value.trim();
-        // const tNum = i.match(regExpNum);
-        // const tSign = i.match(regSign);
-
-        // const arrSkob = i.match(skob);
-
-        // let tmp = i;
-        // while (skob.test(tmp)) {
-
-        //     tmp = tmp.replace(skob, e => {
-
-        //         e = e.slice(1, e.length - 1); // -( and -)
-
-        //         const arrFrStr = arrFromString(e);
-        //         const resArr = resArray(arrFrStr);
-
-        //         return resArr[0];
-        //     });
-        // }
-
-        // const arrFrStr = arrFromString(tmp);
-        // const resArr = resArray(arrFrStr);
-
-        // // console.log(resArr);
-
-        // inpResult.value = resArr[0] || '0';
-
-        // console.log('resArr = ', resArr);
-
-        // const tmp = i.split(skob);
-
-        // console.log(i);
-        // console.log(tmp);
-        // console.log(arrSkob);
-        // console.log('tNum', tNum);
-        // console.log('tSign', tSign);
-    }
-    // end test event & func
-
 })()
 
